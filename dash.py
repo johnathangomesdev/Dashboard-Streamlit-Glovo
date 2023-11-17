@@ -8,7 +8,8 @@ st.set_page_config(layout = "wide")
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-st.title("Dashboard dos ganhos trabalhando com a Glovo")
+st.header("Dashboard dos ganhos trabalhando com a Glovo")
+st.markdown("""---""")
 #Lê o dataframe
 df = pd.read_csv('dados_glovo.csv')
 #Retira € dos valores
@@ -53,8 +54,9 @@ elif option == "Meses":
     tempo = "Dia"
 
 #Separa a tela em colunas
-col1, col2 = st.columns([1,3])
-col3, col4 = st.columns(2)
+col1, col2, col3, col4, col5 = st.columns(5)
+col6 = st.columns(1)
+col7, col8, col9 = st.columns(3)
 #Agrupa os dias com os totais e somar
 df_total = df_filtered.groupby([tempo,"Local"])[["Total"]].sum().reset_index()
 #Cria um grafico o total ganho por dia
@@ -74,17 +76,17 @@ fig_calls_day = px.line(df_call_day, x = tempo,
 #Cria uma indicação com a soma dos valores ganhos no dia
 col1.metric(label="Ganhos Totais", value= round(df_filtered["Total"].sum(),2), delta=None)
 #Cria uma indicação media de ganho
-col1.metric(label="Media de Ganhos", value= round(df_filtered["Total"].mean(),2), delta=None)
+col2.metric(label="Media de Ganhos", value= round(df_filtered["Total"].mean(),2), delta=None)
 #Cria uma indicação com o maior ganho
-col1.metric(label="Melhor Entrega", value= round(df_filtered["Total"].max(),2), delta=None)
+col3.metric(label="Melhor Entrega", value= round(df_filtered["Total"].max(),2), delta=None)
 #Cria uma indicação com o total de kms
-col1.metric(label="KM Totais", value= round(df_filtered["Km"].sum(),2), delta=None)
+col4.metric(label="KM Totais", value= round(df_filtered["Km"].sum(),2), delta=None)
 #Cria uma indicação com o total gorjetas
-col1.metric(label="Gorjetas", value= round(df_filtered["Gorjeta"].sum(),2), delta=None)
+col5.metric(label="Gorjetas", value= round(df_filtered["Gorjeta"].sum(),2), delta=None)
 #Plota o grafico na tela
-col3.subheader("Ganhos Todais por Dia")
-col3.plotly_chart(fig_total_day, use_container_width = True)
-col2.subheader("Entregas")
-col2.plotly_chart(fig_calls_day, use_container_width = True)
-col4.subheader("Restaurantes")
-col4.plotly_chart(fig_local_day, use_container_width = True)
+col7.markdown("""# Ganhos""")
+col7.plotly_chart(fig_total_day, use_container_width = True)
+col8.markdown("""# Entregas""")
+col8.plotly_chart(fig_calls_day, use_container_width = True)
+col9.markdown("""# Restaurantes""")
+col9.plotly_chart(fig_local_day, use_container_width = True)
